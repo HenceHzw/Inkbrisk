@@ -1,0 +1,18 @@
+{
+  "appId": "app.local.deepseekchat",
+  "appName": "Inkbrisk",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "minWebViewVersion": 105,
+    "loggingBehavior": "none",
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "native"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+storeDir: .pnpm-store
+overrides:
+  katex: '0.18.2'
+  'oxfmt>tinypool': '2.1.2'

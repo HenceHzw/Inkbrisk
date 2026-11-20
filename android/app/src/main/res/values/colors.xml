@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#176A60</color>
+    <color name="colorPrimaryDark">#124C45</color>
+    <color name="colorAccent">#176A60</color>
+    <color name="chat_splash">#FAF8F4</color>
+    <color name="inkbrisk_icon_background">#182539</color>
+</resources>

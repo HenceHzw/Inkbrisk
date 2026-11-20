@@ -1,0 +1,56 @@
+.content {
+  max-height: min(55dvh, 400px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.content p {
+  margin: 0 0 12px;
+}
+
+.list {
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--dsw-alias-border-l2);
+}
+
+.list li span,
+.previewLink {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.list li button:not(.previewLink) {
+  flex-shrink: 0;
+}
+
+.previewLink {
+  padding: 6px 0;
+  border: none;
+  background: none;
+  color: var(--dsw-alias-label-primary);
+  text-align: start;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.previewTitle {
+  overflow-wrap: anywhere;
+}
+
+.previewImage {
+  display: block;
+  width: 100%;
+  max-height: 65dvh;
+  object-fit: contain;
+}

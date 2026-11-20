@@ -1,0 +1,65 @@
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.file.DirectoryProperty
+
+abstract class CollectAndroidLicenseNotices extends DefaultTask {
+    @OutputDirectory
+    abstract DirectoryProperty getOutputDirectory()
+}
+
+def licenseSources = rootProject.file('../licenses')
+def generated = layout.buildDirectory.dir('generated/inkbriskNotices')
+def runtime = providers.provider {
+    configurations.getByName('releaseRuntimeClasspath').incoming.artifactView {
+        componentFilter { it instanceof ModuleComponentIdentifier }
+    }.artifacts
+}
+
+def collectNotices = tasks.register('collectAndroidLicenseNotices', CollectAndroidLicenseNotices) {
+    inputs.files(runtime.map { it.artifactFiles })
+    inputs.dir(licenseSources)
+    outputDirectory.set(generated)
+
+    doLast {
+        def components = []
+        def notices = [:].withDefault { [] as Set }
+        def reviewedGroups = ['org.apache.cordova', 'org.jetbrains', 'org.jetbrains.kotlin',
+            'org.jetbrains.kotlinx', 'org.jspecify', 'com.google.guava']
+
+        runtime.get().artifacts.sort { it.id.componentIdentifier.displayName }.each { artifact ->
+            def id = artifact.id.componentIdentifier
+            if (!id.group.startsWith('androidx.') && !reviewedGroups.contains(id.group)) {
+                throw new GradleException("Review the redistribution license for ${id.displayName}")
+            }
+            components.add(id.displayName)
+            if (artifact.file.name.endsWith('.jar') || artifact.file.name.endsWith('.aar')) {
+                new java.util.zip.ZipFile(artifact.file).withCloseable { archive ->
+                    archive.entries().each { entry ->
+                        def name = entry.name.tokenize('/').last()
+                        if (!entry.directory && name ==~ /(?i)(?:licen[sc]es?|notice|copying|copyright)(?:[-.]\w+)*(?<!\.class)/) {
+                            def text = archive.getInputStream(entry).withCloseable { it.getText('UTF-8').trim() }
+                            if (text) notices[text].add(id.displayName)
+                        }
+                    }
+                }
+            }
+        }
+
+        def sections = ['Inkbrisk Android runtime dependencies',
+            'Apache License 2.0 components\n' + components.unique().join('\n'),
+            file("${licenseSources}/APACHE-2.0.txt").getText('UTF-8').trim(),
+            'Apache Cordova, Copyright 2015-2024 Apache Cordova\n\n' +
+                file("${licenseSources}/CORDOVA-NOTICE.txt").getText('UTF-8').trim(),
+            'Kotlin standard library collections include work derived from GWT, Copyright (c) 2007-2008 Google Inc. (Apache License 2.0).',
+            'Kotlin JVM standard library includes work derived from Guava, Copyright (c) 2011 The Guava Authors (Apache License 2.0).',
+            'Kotlin JVM MathJVM includes work derived from Boost, Copyright Eric Ford & Hubert Holin 2001.\n' +
+                file("${licenseSources}/BOOST-1.0.txt").getText('UTF-8').trim()]
+        notices.each { text, ids -> sections.add(ids.join(', ') + '\n\n' + text) }
+        def destination = outputDirectory.file('ANDROID-LICENSES.txt').get().asFile
+        destination.parentFile.mkdirs()
+        destination.setText(sections.join('\n\n------------------------------------------------------------------------\n\n') + '\n', 'UTF-8')
+    }
+}
+
+androidComponents.onVariants(androidComponents.selector().withBuildType('release')) { variant ->
+    variant.sources.assets.addGeneratedSourceDirectory(collectNotices) { it.outputDirectory }
+}

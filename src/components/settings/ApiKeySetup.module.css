@@ -1,0 +1,44 @@
+.dialog {
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.form input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--dsw-alias-border-l3);
+  border-radius: 12px;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 16px;
+}
+
+.form input:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+  outline-offset: 1px;
+}
+
+.error {
+  color: var(--dsw-static-red-600);
+}
+
+.help {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+}
+
+.help a {
+  color: var(--dsw-alias-brand-text);
+}
