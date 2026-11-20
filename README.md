@@ -34,7 +34,7 @@ Inkbrisk 是基于 DeepSeek 开源 Chat Demo 的独立客户端。手机直接�
 
 1. 在项目的发布页下载 `deepseek-mobile.apk`。 [GitHub Releases](https://github.com/HenceHzw/Inkbrisk/releases)
 2. 在手机上打开 APK，根据系统提示允许当前文件管理器安装应用。
-3. 在 DeepSeek 开放平台创建 API Key。打开 Inkbrisk，点「验证并开始」，在 Android 弹窗中输入 Key。 [创建 API Key](https://platform.deepseek.com/api_keys)
+3. 在 DeepSeek 开放平台创建 API Key，然后在 Inkbrisk 中输入并验证。 [API Key 获取与配置指南](docs/API-KEY.md)
 
 ## 选择模型
 
